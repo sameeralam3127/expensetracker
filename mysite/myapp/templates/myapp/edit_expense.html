@@ -1,0 +1,35 @@
+{% extends 'myapp/base.html' %}
+{% block body %}
+    <div class="m-4 sm:m-6 md:m-10">
+        <h2 class="text-3xl font-bold mb-6">Edit Expense</h2>
+        <form class="shadow-xl p-6 bg-white border border-gray-300 rounded-lg" method="POST">
+            {% csrf_token %}
+            <div class="flex flex-col sm:flex-row sm:space-x-6 mb-6">
+                <!-- Expense Name Field -->
+                <div class="flex-1 mb-6 sm:mb-0">
+                    <label class="block text-gray-800 text-sm font-semibold mb-2" for="name">Expense Name:</label>
+                    <input type="text" id="name" name="name" value="{{ form.name.value }}" class="block w-full border border-gray-300 rounded-lg p-2 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+                </div>
+                
+                <!-- Amount Field -->
+                <div class="flex-1 mb-6 sm:mb-0">
+                    <label class="block text-gray-800 text-sm font-semibold mb-2" for="amount">Amount:</label>
+                    <input type="number" id="amount" name="amount" value="{{ form.amount.value }}" class="block w-full border border-gray-300 rounded-lg p-2 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+                </div>
+                
+                <!-- Category Field -->
+                <div class="flex-1 mb-6 sm:mb-0">
+                    <label class="block text-gray-800 text-sm font-semibold mb-2" for="category">Category:</label>
+                    <input type="text" id="category" name="category" value="{{ form.category.value }}" class="block w-full border border-gray-300 rounded-lg p-2 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+                </div>
+            </div>
+
+            <!-- Save Changes Button -->
+            <div class="flex justify-center mt-4">
+                <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg shadow-md transition duration-300 ease-in-out">
+                    Save Changes
+                </button>
+            </div>
+        </form>
+    </div>
+{% endblock %}

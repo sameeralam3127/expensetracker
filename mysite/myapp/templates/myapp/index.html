@@ -1,0 +1,78 @@
+{% extends 'myapp/base.html' %}
+{% block body %}
+
+    <form class="shadow-xl m-4 sm:m-6 md:m-10 rounded-lg p-6 bg-white border border-gray-300" method="POST">
+        {% csrf_token %}
+        
+        <div class="flex flex-col sm:flex-row sm:space-x-6 mb-6">
+            <!-- Expense Name Field -->
+            <div class="flex-1 mb-6 sm:mb-0">
+                <label class="block text-gray-800 text-sm font-semibold mb-2" for="name">Expense Name:</label>
+                <input type="text" id="name" name="name" class="block w-full border border-gray-300 rounded-lg p-2 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+            </div>
+            
+            <!-- Amount Field -->
+            <div class="flex-1 mb-6 sm:mb-0">
+                <label class="block text-gray-800 text-sm font-semibold mb-2" for="amount">Amount:</label>
+                <input type="number" id="amount" name="amount" class="block w-full border border-gray-300 rounded-lg p-2 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+            </div>
+            
+            <!-- Category Field -->
+            <div class="flex-1 mb-6 sm:mb-0">
+                <label class="block text-gray-800 text-sm font-semibold mb-2" for="category">Category:</label>
+                <input type="text" id="category" name="category" class="block w-full border border-gray-300 rounded-lg p-2 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+            </div>
+        </div>
+
+        <!-- Add Button -->
+        <div class="flex justify-center mb-4">
+            <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg shadow-md transition duration-300 ease-in-out">
+                Add
+            </button>
+        </div>
+    </form>
+    
+    <!-- Expenses Table -->
+    <div class="m-4 sm:m-6 md:m-10">
+        <h2 class="text-3xl font-bold mb-6">Expenses💸</h2>
+        <table class="min-w-full bg-white border border-gray-200 rounded-lg shadow-md">
+            <thead>
+                <tr class="bg-gray-100 border-b">
+                    <th class="py-3 px-4 text-left text-gray-700 font-semibold">Name</th>
+                    <th class="py-3 px-4 text-left text-gray-700 font-semibold">Amount</th>
+                    <th class="py-3 px-4 text-left text-gray-700 font-semibold">Category</th>
+                    <th class="py-3 px-4 text-left text-gray-700 font-semibold">Date</th>
+                    <th class="py-3 px-4 text-left text-gray-700 font-semibold">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for expense in expenses %}
+                    <tr class="border-b hover:bg-gray-50">
+                        <td class="py-3 px-4 text-gray-600">{{ expense.name }}</td>
+                        <td class="py-3 px-4 text-gray-600">{{ expense.amount }}</td>
+                        <td class="py-3 px-4 text-gray-600">{{ expense.category }}</td>
+                        <td class="py-3 px-4 text-gray-600">{{ expense.date }}</td>
+                        <td class="py-3 px-4 text-gray-600">
+                            <!-- Edit Button -->
+                            <a href="{% url 'edit_expense' expense.id %}" class="text-blue-600 hover:text-blue-800 font-medium mr-2">
+                                Edit
+                            </a>
+                            <!-- Delete Button -->
+                            <form action="{% url 'delete_expense' expense.id %}" method="POST" class="inline">
+                                {% csrf_token %}
+                                <button type="submit" class="text-red-600 hover:text-red-800 font-medium">
+                                    Delete
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="5" class="py-3 px-4 text-center text-gray-500">No expenses found</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+{% endblock %}
