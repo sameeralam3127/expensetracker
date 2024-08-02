@@ -1,6 +1,7 @@
 {% extends 'myapp/base.html' %}
 {% block body %}
 
+    <!-- Add Expense Form -->
     <form class="shadow-xl m-4 sm:m-6 md:m-10 rounded-lg p-6 bg-white border border-gray-300" method="POST">
         {% csrf_token %}
         
@@ -31,11 +32,42 @@
             </button>
         </div>
     </form>
-    
+
+    <!-- Expense Overview Table -->
+    <div class="m-4 sm:m-6 md:m-10">
+        <h2 class="text-3xl font-bold mb-6">Expense Overview</h2>
+        <table class="min-w-full bg-white border border-gray-200 rounded-lg shadow-md overflow-x-auto">
+            <thead>
+                <tr class="bg-gray-100 border-b">
+                    <th class="py-3 px-4 text-left text-gray-700 font-semibold">Time Period</th>
+                    <th class="py-3 px-4 text-left text-gray-700 font-semibold">Total Expenses</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="border-b hover:bg-gray-50">
+                    <td class="py-3 px-4 text-gray-600">Daily</td>
+                    <td class="py-3 px-4 text-gray-600">${{ daily_sum }}</td>
+                </tr>
+                <tr class="border-b hover:bg-gray-50">
+                    <td class="py-3 px-4 text-gray-600">Weekly</td>
+                    <td class="py-3 px-4 text-gray-600">${{ weekly_sum }}</td>
+                </tr>
+                <tr class="border-b hover:bg-gray-50">
+                    <td class="py-3 px-4 text-gray-600">Monthly</td>
+                    <td class="py-3 px-4 text-gray-600">${{ monthly_sum }}</td>
+                </tr>
+                <tr class="border-b hover:bg-gray-50">
+                    <td class="py-3 px-4 text-gray-600">Yearly</td>
+                    <td class="py-3 px-4 text-gray-600">${{ yearly_sum }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
     <!-- Expenses Table -->
     <div class="m-4 sm:m-6 md:m-10">
         <h2 class="text-3xl font-bold mb-6">Expenses💸</h2>
-        <table class="min-w-full bg-white border border-gray-200 rounded-lg shadow-md">
+        <table class="min-w-full bg-white border border-gray-200 rounded-lg shadow-md overflow-x-auto">
             <thead>
                 <tr class="bg-gray-100 border-b">
                     <th class="py-3 px-4 text-left text-gray-700 font-semibold">Name</th>
@@ -75,4 +107,62 @@
         </table>
     </div>
 
+    <!-- Pie Chart -->
+    <div class="m-4 sm:m-6 md:m-10">
+        <h2 class="text-3xl font-bold mb-6">Expense Distribution by Category</h2>
+        <div class="relative max-w-xs mx-auto">
+            <canvas id="expenseChart" class="max-h-60"></canvas>
+        </div>
+    </div>
+
+    <!-- Chart.js Script -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const ctx = document.getElementById('expenseChart').getContext('2d');
+        const expenseChart = new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: {{ category_names|safe }},
+                datasets: [{
+                    data: {{ category_totals|safe }},
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.6)',
+                        'rgba(54, 162, 235, 0.6)',
+                        'rgba(75, 192, 192, 0.6)',
+                        'rgba(255, 205, 86, 0.6)',
+                        'rgba(153, 102, 255, 0.6)',
+                        'rgba(255, 159, 64, 0.6)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(255, 205, 86, 1)',
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(255, 159, 64, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(tooltipItem) {
+                                return tooltipItem.label + ': $' + tooltipItem.raw.toFixed(2);
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    });
+</script>
+
+    
 {% endblock %}
